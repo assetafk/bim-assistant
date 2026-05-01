@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>BIM AI Assistant</Name>
+    <Assembly>%APPDATA%\Autodesk\Revit\Addins\2025\BimAiAssistant\BimAiAssistant.dll</Assembly>
+    <AddInId>8D83AF1A-BA17-4A3B-9D7E-79B5ACAC0A46</AddInId>
+    <FullClassName>BimAiAssistant.App</FullClassName>
+    <VendorId>AKIM</VendorId>
+    <VendorDescription>BIM AI Assistant for Autodesk Revit</VendorDescription>
+  </AddIn>
+</RevitAddIns>
