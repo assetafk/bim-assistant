@@ -1,6 +1,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using BimAiAssistant.Models;
+using System.IO;
 
 namespace BimAiAssistant.Services;
 

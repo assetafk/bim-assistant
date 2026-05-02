@@ -36,7 +36,7 @@ public sealed class App : IExternalApplication
         where TCommand : IExternalCommand
     {
         string assembly = typeof(App).Assembly.Location;
-        var data = new PushButtonData(typeof(TCommand).Name, text, assembly, typeof(TCommand).FullName)
+        var data = new PushButtonData(typeof(TCommand).Name, text, assembly, typeof(TCommand).FullName!)
         {
             ToolTip = tooltip,
             LongDescription = tooltip

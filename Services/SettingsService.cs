@@ -1,5 +1,6 @@
 using BimAiAssistant.Models;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace BimAiAssistant.Services;
 
