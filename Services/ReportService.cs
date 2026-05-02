@@ -23,6 +23,7 @@ public sealed class ReportService
     {
         var lines = new List<string>
         {
+            $"Organization: {model.Organization}",
             $"Project: {model.Project}",
             $"Floors: {model.LevelCount}",
             $"Walls: {model.Statistics.Walls}",

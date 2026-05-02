@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Settings"
         Width="460"
-        Height="360"
+        Height="440"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#F8FAFC">
@@ -43,19 +43,27 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="API URL" VerticalAlignment="Center" Foreground="#334155" />
-            <TextBox Grid.Column="1" Text="{Binding ApiUrl, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Organization" VerticalAlignment="Center" Foreground="#334155" />
+            <TextBox Grid.Column="1" Text="{Binding OrganizationName, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Grid.Row="1" Text="API Key" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ApiKey, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
+            <TextBlock Grid.Row="1" Text="Backend URL" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BackendUrl, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
 
-            <TextBlock Grid.Row="2" Text="Model Name" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
+            <TextBlock Grid.Row="2" Text="API URL" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ApiUrl, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
 
-            <TextBlock Grid.Row="3" Text="Temperature" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
-            <Slider Grid.Row="3"
+            <TextBlock Grid.Row="3" Text="API Key" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ApiKey, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
+
+            <TextBlock Grid.Row="4" Text="Model Name" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" />
+
+            <TextBlock Grid.Row="5" Text="Temperature" VerticalAlignment="Center" Margin="0,12,0,0" Foreground="#334155" />
+            <Slider Grid.Row="5"
                     Grid.Column="1"
                     Minimum="0"
                     Maximum="1"

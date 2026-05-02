@@ -47,6 +47,7 @@ public sealed class OpenAIService
             floors = model.Statistics.Floors,
             rooms = model.Statistics.Rooms,
             buildingArea = model.Statistics.BuildingArea,
+            organization = model.Organization,
             project = model.Project
         };
 

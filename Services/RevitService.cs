@@ -32,6 +32,7 @@ public sealed class RevitService
     {
         var model = new BuildingModel
         {
+            Organization = "Maybeworks",
             Project = string.IsNullOrWhiteSpace(_document.ProjectInformation?.Name)
                 ? Path.GetFileNameWithoutExtension(_document.Title)
                 : _document.ProjectInformation.Name,

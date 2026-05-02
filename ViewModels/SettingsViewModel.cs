@@ -9,6 +9,8 @@ namespace BimAiAssistant.ViewModels;
 public sealed class SettingsViewModel : ObservableObject
 {
     private readonly SettingsService _settingsService;
+    private string _organizationName;
+    private string _backendUrl;
     private string _apiUrl;
     private string _apiKey;
     private string _modelName;
@@ -18,11 +20,25 @@ public sealed class SettingsViewModel : ObservableObject
     {
         _settingsService = settingsService;
         AppSettings settings = _settingsService.Load();
+        _organizationName = settings.OrganizationName;
+        _backendUrl = settings.BackendUrl;
         _apiUrl = settings.ApiUrl;
         _apiKey = settings.ApiKey;
         _modelName = settings.ModelName;
         _temperature = settings.Temperature;
         SaveCommand = new RelayCommand(Save);
+    }
+
+    public string OrganizationName
+    {
+        get => _organizationName;
+        set => SetProperty(ref _organizationName, value);
+    }
+
+    public string BackendUrl
+    {
+        get => _backendUrl;
+        set => SetProperty(ref _backendUrl, value);
     }
 
     public string ApiUrl
@@ -55,6 +71,8 @@ public sealed class SettingsViewModel : ObservableObject
     {
         _settingsService.Save(new AppSettings
         {
+            OrganizationName = OrganizationName,
+            BackendUrl = BackendUrl,
             ApiUrl = ApiUrl,
             ApiKey = ApiKey,
             ModelName = ModelName,
