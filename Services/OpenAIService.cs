@@ -41,14 +41,46 @@ public sealed class OpenAIService
     {
         object context = new
         {
-            walls = model.Statistics.Walls,
-            doors = model.Statistics.Doors,
-            windows = model.Statistics.Windows,
-            floors = model.Statistics.Floors,
-            rooms = model.Statistics.Rooms,
-            buildingArea = model.Statistics.BuildingArea,
+            counts = new
+            {
+                walls = model.Statistics.Walls,
+                doors = model.Statistics.Doors,
+                windows = model.Statistics.Windows,
+                columns = model.Columns.Count,
+                rooms = model.Statistics.Rooms,
+                levels = model.Levels.Count,
+                families = model.Families.Count,
+                views = model.Views.Count,
+                sheets = model.Sheets.Count,
+                dimensions = model.Dimensions.Count,
+                floors = model.Statistics.Floors,
+                buildingArea = model.Statistics.BuildingArea
+            },
             organization = model.Organization,
-            project = model.Project
+            project = model.Project,
+            structure = new
+            {
+                walls = model.Walls.Take(200),
+                doors = model.Doors.Take(200),
+                windows = model.Windows.Take(200),
+                columns = model.Columns.Take(200),
+                rooms = model.Rooms.Take(200),
+                levels = model.Levels,
+                families = model.Families.Take(200),
+                views = model.Views.Take(200),
+                sheets = model.Sheets.Take(200),
+                dimensions = model.Dimensions.Take(200)
+            },
+            queryIndexes = new
+            {
+                wallsWithoutMaterial = model.Walls.Where(wall => string.IsNullOrWhiteSpace(wall.Material)),
+                roomsWithoutArea = model.Rooms.Where(room => room.Area <= 0),
+                doorsWithoutMark = model.Doors.Where(door => string.IsNullOrWhiteSpace(door.Mark)),
+                windowsWithoutLevel = model.Windows.Where(window => string.IsNullOrWhiteSpace(window.Level)),
+                windowsByLevel = model.Windows
+                    .GroupBy(window => string.IsNullOrWhiteSpace(window.Level) ? "Unknown" : window.Level)
+                    .ToDictionary(group => group.Key, group => group.Count())
+            }
         };
 
         if (settings.ApiUrl.Contains("/v1/chat/completions", StringComparison.OrdinalIgnoreCase))
@@ -62,7 +94,7 @@ public sealed class OpenAIService
                     new
                     {
                         role = "system",
-                        content = "You answer questions about a Revit BIM model using only the supplied JSON context."
+                        content = "You are a Maybeworks BIM assistant. Understand natural-language Revit model queries and answer using only the supplied JSON context. Return exact element ids when the user asks to find elements."
                     },
                     new
                     {

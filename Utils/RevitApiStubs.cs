@@ -18,14 +18,35 @@ namespace Autodesk.Revit.DB
     {
         public ElementId Id { get; init; } = new(0);
         public ElementId LevelId { get; init; } = ElementId.InvalidElementId;
+        public string Name { get; init; } = string.Empty;
         public virtual Parameter? get_Parameter(BuiltInParameter parameter) => null;
         public virtual ICollection<ElementId> GetMaterialIds(bool returnPaintMaterials) => [];
+        public virtual ElementId GetTypeId() => ElementId.InvalidElementId;
     }
 
     public class Wall : Element { }
     public class Floor : Element { }
-    public class Level : Element { public string Name { get; init; } = string.Empty; }
-    public class Material : Element { public string Name { get; init; } = string.Empty; }
+    public class Level : Element { public double Elevation { get; init; } }
+    public class Material : Element { }
+    public class ElementType : Element { public string FamilyName { get; init; } = string.Empty; }
+    public class Category { public string Name { get; init; } = string.Empty; }
+    public class Family : Element { public Category? FamilyCategory { get; init; } }
+    public class View : Element
+    {
+        public bool IsTemplate { get; init; }
+        public ViewType ViewType { get; init; }
+    }
+
+    public class ViewSheet : View
+    {
+        public string SheetNumber { get; init; } = string.Empty;
+    }
+
+    public class Dimension : Element
+    {
+        public ElementId OwnerViewId { get; init; } = ElementId.InvalidElementId;
+    }
+
     public class ElementSet { }
 
     public sealed class ElementId
@@ -61,7 +82,20 @@ namespace Autodesk.Revit.DB
     {
         OST_Doors,
         OST_Windows,
-        OST_Rooms
+        OST_Rooms,
+        OST_Columns,
+        OST_StructuralColumns
+    }
+
+    public enum ViewType
+    {
+        Undefined,
+        FloorPlan,
+        CeilingPlan,
+        Section,
+        Elevation,
+        ThreeD,
+        DrawingSheet
     }
 
     public enum BuiltInParameter
@@ -105,7 +139,7 @@ namespace Autodesk.Revit.DB.Architecture
 {
     public class Room : Autodesk.Revit.DB.Element
     {
-        public string Name { get; init; } = string.Empty;
+        public new string Name { get; init; } = string.Empty;
         public double Area { get; init; }
     }
 }

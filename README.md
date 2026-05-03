@@ -13,6 +13,8 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Settings`: stores organization, backend URL, API URL, API key, model name and temperature in `%APPDATA%\BimAiAssistant\settings.json`.
 - `Generate Report`: writes `building-report.pdf` to `Documents\BimAiAssistant`.
 - `RBAC foundation`: includes Admin, Engineer and Viewer roles for secured production workflows.
+- `Model Structure`: extracts walls, doors, windows, columns, rooms, levels, families, views, sheets and dimensions.
+- `Work Projects`: includes Business Center, Shopping Mall, School and Hospital project contexts.
 
 ## Commercial MVP Scope
 
@@ -27,6 +29,14 @@ Maybeworks BIM AI Assistant is structured as a production plugin, not a one-file
 - Security target: SSO, JWT, refresh tokens and RBAC.
 
 See [docs/MVP.md](docs/MVP.md) for the detailed Maybeworks MVP specification.
+
+## AI Query Examples
+
+The chat payload includes counts, model structure and query indexes, so the LLM can answer:
+
+- `Show all walls without material.`
+- `Find rooms without area.`
+- `How many windows are on the second level?`
 
 ## Build
 
@@ -78,14 +88,22 @@ Generic `/chat` endpoints receive:
   "model": "llama3.1",
   "temperature": 0.2,
   "context": {
-    "walls": 245,
-    "doors": 67,
-    "windows": 134,
-    "floors": 12,
-    "rooms": 98,
-    "buildingArea": 1250.5,
+    "counts": {
+      "walls": 245,
+      "doors": 67,
+      "windows": 134,
+      "columns": 48,
+      "rooms": 98,
+      "levels": 12,
+      "families": 84,
+      "views": 36,
+      "sheets": 18,
+      "dimensions": 420,
+      "floors": 12,
+      "buildingArea": 1250.5
+    },
     "organization": "Maybeworks",
-    "project": "Office"
+    "project": "Business Center"
   }
 }
 ```

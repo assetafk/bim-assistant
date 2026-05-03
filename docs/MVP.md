@@ -53,6 +53,17 @@ Infrastructure:
 - Engineer
 - Project Manager
 
+## Work Projects
+
+Each authorized user can open one of the Maybeworks work projects:
+
+- Business Center
+- Shopping Mall
+- School
+- Hospital
+
+The desktop plugin keeps the selected project context and sends it to the backend together with Revit model metadata.
+
 ## Authorization Requirements
 
 The MVP is designed for enterprise authorization:
@@ -88,6 +99,43 @@ Initial permission model:
 - Local settings storage.
 - PDF report generation.
 - Auth/RBAC service foundation for secured production workflows.
+
+## Revit Model Structure
+
+The plugin extracts the following structure through Revit API:
+
+- Walls
+- Doors
+- Windows
+- Columns
+- Rooms
+- Levels
+- Families
+- Views
+- Sheets
+- Dimensions
+
+This structure is normalized into DTO models before export or AI processing, so the backend and LLM providers do not depend on Revit API types directly.
+
+## AI Chat Requirements
+
+The AI chat must understand natural-language BIM queries and answer only from the current model context.
+
+Supported MVP query examples:
+
+- Show all walls without material.
+- Find rooms without area.
+- How many windows are on the second level?
+
+The plugin sends both summary counts and query-oriented indexes:
+
+- `wallsWithoutMaterial`
+- `roomsWithoutArea`
+- `doorsWithoutMark`
+- `windowsWithoutLevel`
+- `windowsByLevel`
+
+When the user asks to find elements, the assistant should return element ids and short explanations.
 
 ## Backend API Direction
 
