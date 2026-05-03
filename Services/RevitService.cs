@@ -41,7 +41,13 @@ public sealed class RevitService
             Walls = Walls().Select(ToWallModel).ToList(),
             Doors = Elements(BuiltInCategory.OST_Doors).Select(ToDoorModel).ToList(),
             Windows = Elements(BuiltInCategory.OST_Windows).Select(ToWindowModel).ToList(),
-            Rooms = Rooms().Select(ToRoomModel).ToList()
+            Columns = Columns().Select(ToColumnModel).ToList(),
+            Rooms = Rooms().Select(ToRoomModel).ToList(),
+            Levels = Levels().Select(ToLevelModel).ToList(),
+            Families = Families().Select(ToFamilyModel).ToList(),
+            Views = Views().Select(ToViewModel).ToList(),
+            Sheets = Sheets().Select(ToSheetModel).ToList(),
+            Dimensions = Dimensions().Select(ToDimensionModel).ToList()
         };
 
         return model;
@@ -94,6 +100,42 @@ public sealed class RevitService
             .WhereElementIsNotElementType()
             .OfType<Room>();
 
+    private IEnumerable<Element> Columns() =>
+        Elements(BuiltInCategory.OST_Columns)
+            .Concat(Elements(BuiltInCategory.OST_StructuralColumns))
+            .GroupBy(element => element.Id.Value)
+            .Select(group => group.First());
+
+    private IEnumerable<Level> Levels() =>
+        new FilteredElementCollector(_document)
+            .OfClass(typeof(Level))
+            .WhereElementIsNotElementType()
+            .Cast<Level>();
+
+    private IEnumerable<Family> Families() =>
+        new FilteredElementCollector(_document)
+            .OfClass(typeof(Family))
+            .Cast<Family>();
+
+    private IEnumerable<View> Views() =>
+        new FilteredElementCollector(_document)
+            .OfClass(typeof(View))
+            .WhereElementIsNotElementType()
+            .Cast<View>()
+            .Where(view => !view.IsTemplate);
+
+    private IEnumerable<ViewSheet> Sheets() =>
+        new FilteredElementCollector(_document)
+            .OfClass(typeof(ViewSheet))
+            .WhereElementIsNotElementType()
+            .Cast<ViewSheet>();
+
+    private IEnumerable<Dimension> Dimensions() =>
+        new FilteredElementCollector(_document)
+            .OfClass(typeof(Dimension))
+            .WhereElementIsNotElementType()
+            .Cast<Dimension>();
+
     private WallModel ToWallModel(Wall wall) => new()
     {
         Id = wall.Id.Value,
@@ -115,11 +157,55 @@ public sealed class RevitService
         Level = GetLevelName(window)
     };
 
+    private ColumnModel ToColumnModel(Element column) => new()
+    {
+        Id = column.Id.Value,
+        FamilyName = GetFamilyName(column),
+        TypeName = GetTypeName(column),
+        Level = GetLevelName(column),
+        Material = GetMaterialName(column)
+    };
+
     private RoomModel ToRoomModel(Room room) => new()
     {
         Id = room.Id.Value,
         Name = room.Name ?? string.Empty,
         Area = Math.Round(UnitUtils.ConvertFromInternalUnits(room.Area, UnitTypeId.SquareMeters), 2)
+    };
+
+    private LevelModel ToLevelModel(Level level) => new()
+    {
+        Id = level.Id.Value,
+        Name = level.Name,
+        Elevation = Math.Round(level.Elevation * FeetToMillimeters, 2)
+    };
+
+    private FamilyModel ToFamilyModel(Family family) => new()
+    {
+        Id = family.Id.Value,
+        Name = family.Name,
+        Category = family.FamilyCategory?.Name ?? string.Empty
+    };
+
+    private ViewModel ToViewModel(View view) => new()
+    {
+        Id = view.Id.Value,
+        Name = view.Name,
+        ViewType = view.ViewType.ToString()
+    };
+
+    private SheetModel ToSheetModel(ViewSheet sheet) => new()
+    {
+        Id = sheet.Id.Value,
+        Number = sheet.SheetNumber,
+        Name = sheet.Name
+    };
+
+    private DimensionModel ToDimensionModel(Dimension dimension) => new()
+    {
+        Id = dimension.Id.Value,
+        Name = dimension.Name ?? string.Empty,
+        ViewName = _document.GetElement(dimension.OwnerViewId) is View view ? view.Name : string.Empty
     };
 
     private string GetWallMaterial(Wall wall)
@@ -147,6 +233,30 @@ public sealed class RevitService
 
         return _document.GetElement(parameter.AsElementId()) is Material material ? material.Name : string.Empty;
     }
+
+    private string GetMaterialName(Element element)
+    {
+        string material = GetMaterialNameFromParameter(element, BuiltInParameter.STRUCTURAL_MATERIAL_PARAM);
+        if (!string.IsNullOrWhiteSpace(material))
+        {
+            return material;
+        }
+
+        return element.GetMaterialIds(false)
+            .Select(id => _document.GetElement(id))
+            .OfType<Material>()
+            .Select(item => item.Name)
+            .FirstOrDefault(name => !string.IsNullOrWhiteSpace(name)) ?? string.Empty;
+    }
+
+    private string GetFamilyName(Element element)
+    {
+        Element? type = _document.GetElement(element.GetTypeId());
+        return type is ElementType elementType ? elementType.FamilyName : string.Empty;
+    }
+
+    private string GetTypeName(Element element) =>
+        _document.GetElement(element.GetTypeId())?.Name ?? string.Empty;
 
     private string GetLevelName(Element element)
     {
