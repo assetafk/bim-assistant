@@ -80,6 +80,24 @@ public sealed class OpenAIService
                 windowsByLevel = model.Windows
                     .GroupBy(window => string.IsNullOrWhiteSpace(window.Level) ? "Unknown" : window.Level)
                     .ToDictionary(group => group.Key, group => group.Count())
+            },
+            availableActions = new[]
+            {
+                new
+                {
+                    name = "RenameDoorsByCompanyStandard",
+                    description = "Rename all doors using the Maybeworks mark format MW-DR-{LEVEL}-{NUMBER}."
+                },
+                new
+                {
+                    name = "FillMissingParameters",
+                    description = "Fill or flag missing required parameters such as door marks and wall materials."
+                },
+                new
+                {
+                    name = "CreateDoorSchedule",
+                    description = "Create a Revit door schedule for the active project."
+                }
             }
         };
 
@@ -94,7 +112,7 @@ public sealed class OpenAIService
                     new
                     {
                         role = "system",
-                        content = "You are a Maybeworks BIM assistant. Understand natural-language Revit model queries and answer using only the supplied JSON context. Return exact element ids when the user asks to find elements."
+                        content = "You are a Maybeworks BIM assistant. Understand natural-language Revit model queries and answer using only the supplied JSON context. Return exact element ids when the user asks to find elements. If the user asks to modify the Revit model, do not invent operations. Return a short explanation and an action JSON object with one of the allowed availableActions. The desktop plugin will ask for confirmation and execute the action through a safe Revit transaction."
                     },
                     new
                     {
@@ -110,7 +128,17 @@ public sealed class OpenAIService
             message = userMessage,
             model = settings.ModelName,
             temperature = settings.Temperature,
-            context
+            context,
+            actionSchema = new
+            {
+                type = "object",
+                required = new[] { "action" },
+                example = new
+                {
+                    action = "RenameDoorsByCompanyStandard",
+                    arguments = new { }
+                }
+            }
         };
     }
 

@@ -137,6 +137,40 @@ The plugin sends both summary counts and query-oriented indexes:
 
 When the user asks to find elements, the assistant should return element ids and short explanations.
 
+## AI Actions
+
+The assistant can request safe Revit tools instead of only answering with text. The LLM never executes arbitrary code. It returns an action name and arguments, then the desktop plugin validates the action, asks the user for confirmation and runs the operation through a Revit transaction.
+
+Supported MVP actions:
+
+- `RenameDoorsByCompanyStandard`: rename all doors using the Maybeworks standard `MW-DR-{LEVEL}-{NUMBER}`.
+- `FillMissingParameters`: fill or flag missing required parameters, including missing door marks and walls without material.
+- `CreateDoorSchedule`: create a Revit door schedule in the active project.
+
+Example user requests:
+
+- Rename all doors by company standard.
+- Fill missing parameters.
+- Create a door schedule.
+
+Action response contract:
+
+```json
+{
+  "message": "I can rename all doors using the Maybeworks standard. Please confirm before applying changes.",
+  "action": "RenameDoorsByCompanyStandard",
+  "arguments": {}
+}
+```
+
+Execution rules:
+
+- Only whitelisted actions are allowed.
+- Model-changing actions require user confirmation.
+- Actions run inside `Autodesk.Revit.DB.Transaction`.
+- Failed actions return a structured result with message and affected element count.
+- Future production execution should be routed through External Events when called from modeless WPF windows.
+
 ## Backend API Direction
 
 Planned FastAPI endpoints:

@@ -18,7 +18,7 @@ namespace Autodesk.Revit.DB
     {
         public ElementId Id { get; init; } = new(0);
         public ElementId LevelId { get; init; } = ElementId.InvalidElementId;
-        public string Name { get; init; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public virtual Parameter? get_Parameter(BuiltInParameter parameter) => null;
         public virtual ICollection<ElementId> GetMaterialIds(bool returnPaintMaterials) => [];
         public virtual ElementId GetTypeId() => ElementId.InvalidElementId;
@@ -45,6 +45,19 @@ namespace Autodesk.Revit.DB
     public class Dimension : Element
     {
         public ElementId OwnerViewId { get; init; } = ElementId.InvalidElementId;
+    }
+
+    public class ViewSchedule : View
+    {
+        public static ViewSchedule CreateSchedule(Document document, ElementId categoryId) => new();
+    }
+
+    public sealed class Transaction : IDisposable
+    {
+        public Transaction(Document document, string name) { }
+        public void Start() { }
+        public void Commit() { }
+        public void Dispose() { }
     }
 
     public class ElementSet { }
@@ -105,7 +118,8 @@ namespace Autodesk.Revit.DB
         WALL_USER_HEIGHT_PARAM,
         STRUCTURAL_MATERIAL_PARAM,
         FAMILY_LEVEL_PARAM,
-        INSTANCE_REFERENCE_LEVEL_PARAM
+        INSTANCE_REFERENCE_LEVEL_PARAM,
+        ALL_MODEL_INSTANCE_COMMENTS
     }
 
     public enum StorageType
@@ -118,10 +132,12 @@ namespace Autodesk.Revit.DB
     public sealed class Parameter
     {
         public StorageType StorageType { get; init; }
+        public bool IsReadOnly { get; init; }
         public double AsDouble() => 0;
         public string? AsString() => null;
         public string? AsValueString() => null;
         public ElementId AsElementId() => ElementId.InvalidElementId;
+        public void Set(string value) { }
     }
 
     public static class UnitUtils

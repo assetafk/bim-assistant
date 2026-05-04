@@ -15,6 +15,7 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `RBAC foundation`: includes Admin, Engineer and Viewer roles for secured production workflows.
 - `Model Structure`: extracts walls, doors, windows, columns, rooms, levels, families, views, sheets and dimensions.
 - `Work Projects`: includes Business Center, Shopping Mall, School and Hospital project contexts.
+- `AI Actions`: supports whitelisted model actions such as renaming doors, filling missing parameters and creating a door schedule.
 
 ## Commercial MVP Scope
 
@@ -37,6 +38,14 @@ The chat payload includes counts, model structure and query indexes, so the LLM 
 - `Show all walls without material.`
 - `Find rooms without area.`
 - `How many windows are on the second level?`
+
+For model-changing requests, the assistant returns a safe action request:
+
+- `Rename all doors by company standard.`
+- `Fill missing parameters.`
+- `Create a door schedule.`
+
+The plugin maps these requests to whitelisted Revit actions and executes them through a transaction after user confirmation.
 
 ## Build
 
