@@ -99,6 +99,7 @@ Initial permission model:
 - Rule Engine with JSON rules that can be changed without recompilation.
 - Local settings storage.
 - AI PDF report generation.
+- Dashboard with BIM KPI charts.
 - Auth/RBAC service foundation for secured production workflows.
 
 ## Revit Model Structure
@@ -256,6 +257,21 @@ Output:
 ```text
 Documents\BimAiAssistant\ai-building-report.pdf
 ```
+
+## Dashboard
+
+The Dashboard provides visual KPI charts for the active Revit model.
+
+Charts:
+
+- Error count.
+- Room count.
+- Level count.
+- Door count.
+- Window count.
+- Material count.
+
+The dashboard is available from the `AI Tools` ribbon tab and uses the same Revit API model data and Validation Engine results as AI Report.
 
 ## Backend API Direction
 

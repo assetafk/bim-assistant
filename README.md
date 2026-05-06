@@ -19,6 +19,7 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Validation Engine`: checks empty parameters, invalid families, missing materials, intersections, duplicates, unused types and invalid levels.
 - `Rule Engine`: loads custom company rules from `%APPDATA%\BimAiAssistant\rules.json` without recompilation.
 - `AI Report`: includes validation issues, statistics, element counts, AI recommendations and problem zones.
+- `Dashboard`: displays charts for errors, rooms, levels, doors, windows and materials.
 
 ## Commercial MVP Scope
 

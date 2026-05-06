@@ -20,6 +20,7 @@ public sealed class App : IExternalApplication
         }
 
         RibbonPanel panel = application.CreateRibbonPanel(tabName, "BIM Assistant");
+        AddButton<DashboardCommand>(panel, "Dashboard", "Show BIM model KPI dashboard.");
         AddButton<ModelStatisticsCommand>(panel, "Model\nStatistics", "Counts walls, doors, windows, floors and rooms.");
         AddButton<AICommand>(panel, "AI\nAssistant", "Ask questions about the active BIM model.");
         AddButton<ExportCommand>(panel, "Export\nModel", "Export model data to building.json.");
