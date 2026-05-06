@@ -16,6 +16,8 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Model Structure`: extracts walls, doors, windows, columns, rooms, levels, families, views, sheets and dimensions.
 - `Work Projects`: includes Business Center, Shopping Mall, School and Hospital project contexts.
 - `AI Actions`: supports whitelisted model actions such as renaming doors, filling missing parameters and creating a door schedule.
+- `Validation Engine`: checks empty parameters, invalid families, missing materials, intersections, duplicates, unused types and invalid levels.
+- `Rule Engine`: loads custom company rules from `%APPDATA%\BimAiAssistant\rules.json` without recompilation.
 
 ## Commercial MVP Scope
 

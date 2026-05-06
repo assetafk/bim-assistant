@@ -20,6 +20,7 @@ namespace Autodesk.Revit.DB
         public ElementId LevelId { get; init; } = ElementId.InvalidElementId;
         public string Name { get; set; } = string.Empty;
         public virtual Parameter? get_Parameter(BuiltInParameter parameter) => null;
+        public virtual Parameter? LookupParameter(string name) => null;
         public virtual ICollection<ElementId> GetMaterialIds(bool returnPaintMaterials) => [];
         public virtual ElementId GetTypeId() => ElementId.InvalidElementId;
     }
@@ -87,8 +88,17 @@ namespace Autodesk.Revit.DB
         public FilteredElementCollector OfClass(Type type) => this;
         public FilteredElementCollector OfCategory(BuiltInCategory category) => this;
         public FilteredElementCollector WhereElementIsNotElementType() => this;
+        public FilteredElementCollector WhereElementIsElementType() => this;
+        public FilteredElementCollector WherePasses(ElementFilter filter) => this;
         public int GetElementCount() => Count;
         public ICollection<Element> ToElements() => this;
+    }
+
+    public abstract class ElementFilter { }
+
+    public sealed class ElementIntersectsElementFilter : ElementFilter
+    {
+        public ElementIntersectsElementFilter(Element element) { }
     }
 
     public enum BuiltInCategory

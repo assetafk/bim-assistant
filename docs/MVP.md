@@ -95,7 +95,8 @@ Initial permission model:
 - Model statistics from Revit API.
 - AI assistant with model-context JSON payload.
 - JSON export for integration with backend services.
-- Model validation rules.
+- Validation Engine with built-in BIM QA checks.
+- Rule Engine with JSON rules that can be changed without recompilation.
 - Local settings storage.
 - PDF report generation.
 - Auth/RBAC service foundation for secured production workflows.
@@ -170,6 +171,71 @@ Execution rules:
 - Actions run inside `Autodesk.Revit.DB.Transaction`.
 - Failed actions return a structured result with message and affected element count.
 - Future production execution should be routed through External Events when called from modeless WPF windows.
+
+## Validation Engine
+
+The Validation Engine runs built-in model quality checks:
+
+- Empty parameters.
+- Invalid family naming.
+- Missing material.
+- Element intersections.
+- Duplicate marks or identifiers.
+- Unused types.
+- Invalid or missing levels.
+
+Each validation result contains:
+
+- Rule id.
+- Severity.
+- Element type.
+- Element id.
+- Message.
+
+## Rule Engine
+
+Maybeworks can create and edit company-specific validation rules without recompiling the Revit plugin. Rules are stored as JSON in:
+
+```text
+%APPDATA%\BimAiAssistant\rules.json
+```
+
+Default examples:
+
+```json
+[
+  {
+    "id": "MW-WALL-FIRE-RATING",
+    "name": "All walls must have FireRating",
+    "category": "Walls",
+    "check": "RequiredParameter",
+    "parameterName": "FireRating",
+    "severity": "Error",
+    "enabled": true
+  },
+  {
+    "id": "MW-DOOR-WIDTH",
+    "name": "Doors must have Width",
+    "category": "Doors",
+    "check": "RequiredParameter",
+    "parameterName": "Width",
+    "severity": "Error",
+    "enabled": true
+  }
+]
+```
+
+Supported MVP rule check:
+
+- `RequiredParameter`: validates that a parameter exists and is not empty.
+
+Supported MVP categories:
+
+- Walls
+- Doors
+- Windows
+- Columns
+- Rooms
 
 ## Backend API Direction
 
