@@ -98,7 +98,7 @@ Initial permission model:
 - Validation Engine with built-in BIM QA checks.
 - Rule Engine with JSON rules that can be changed without recompilation.
 - Local settings storage.
-- PDF report generation.
+- AI PDF report generation.
 - Auth/RBAC service foundation for secured production workflows.
 
 ## Revit Model Structure
@@ -236,6 +236,26 @@ Supported MVP categories:
 - Windows
 - Columns
 - Rooms
+
+## AI Report
+
+The plugin generates a PDF AI report for the active Maybeworks project.
+
+Report contents:
+
+- Validation errors and warnings.
+- Model statistics.
+- Element counts.
+- AI recommendations.
+- Problem zones.
+
+The report combines deterministic Revit API data with AI-style recommendations derived from validation results. For production deployment, recommendation generation can be moved to OpenAI, Azure OpenAI or Ollama through the same backend contract used by AI Chat.
+
+Output:
+
+```text
+Documents\BimAiAssistant\ai-building-report.pdf
+```
 
 ## Backend API Direction
 

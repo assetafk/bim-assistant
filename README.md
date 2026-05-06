@@ -11,13 +11,14 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Export Model`: writes `building.json` to `Documents\BimAiAssistant`.
 - `Find Errors`: checks rooms without area, doors without mark, walls without material and windows without a valid level.
 - `Settings`: stores organization, backend URL, API URL, API key, model name and temperature in `%APPDATA%\BimAiAssistant\settings.json`.
-- `Generate Report`: writes `building-report.pdf` to `Documents\BimAiAssistant`.
+- `Generate Report`: writes an AI PDF report to `Documents\BimAiAssistant\ai-building-report.pdf`.
 - `RBAC foundation`: includes Admin, Engineer and Viewer roles for secured production workflows.
 - `Model Structure`: extracts walls, doors, windows, columns, rooms, levels, families, views, sheets and dimensions.
 - `Work Projects`: includes Business Center, Shopping Mall, School and Hospital project contexts.
 - `AI Actions`: supports whitelisted model actions such as renaming doors, filling missing parameters and creating a door schedule.
 - `Validation Engine`: checks empty parameters, invalid families, missing materials, intersections, duplicates, unused types and invalid levels.
 - `Rule Engine`: loads custom company rules from `%APPDATA%\BimAiAssistant\rules.json` without recompilation.
+- `AI Report`: includes validation issues, statistics, element counts, AI recommendations and problem zones.
 
 ## Commercial MVP Scope
 
