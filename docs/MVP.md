@@ -100,6 +100,8 @@ Initial permission model:
 - Local settings storage.
 - AI PDF report generation.
 - Dashboard with BIM KPI charts.
+- Project synchronization with backend and database.
+- Change history and undo for tracked operations.
 - Auth/RBAC service foundation for secured production workflows.
 
 ## Revit Model Structure
@@ -273,6 +275,66 @@ Charts:
 
 The dashboard is available from the `AI Tools` ribbon tab and uses the same Revit API model data and Validation Engine results as AI Report.
 
+## Sync
+
+The plugin supports project synchronization through the production data pipeline:
+
+```text
+Revit -> Plugin -> Backend -> Database
+```
+
+The sync payload contains:
+
+- Organization.
+- Project name.
+- Sync timestamp.
+- Normalized Revit model structure.
+- Validation issues.
+- Change history.
+
+Desktop command:
+
+- `Sync`
+
+Backend target:
+
+- `POST /sync/revit-model`
+
+The backend is responsible for persisting synchronized project snapshots into PostgreSQL and storing large exported artifacts in MinIO when needed.
+
+## Change History
+
+Every tracked model-changing operation stores an audit trail:
+
+- Who changed it.
+- When it changed.
+- What action was executed.
+- What element changed.
+- Parameter name.
+- Old value.
+- New value.
+
+Local audit storage:
+
+```text
+%APPDATA%\BimAiAssistant\change-history.json
+```
+
+The history is included in synchronization payloads so the backend/database can keep a full project audit log.
+
+## Undo
+
+Any tracked parameter change can be undone through the `Undo` ribbon command.
+
+Undo behavior:
+
+- Loads the latest non-undone operation from local change history.
+- Opens a Revit transaction.
+- Restores old parameter values in reverse order.
+- Marks the operation as undone.
+
+For production use, destructive object-creation operations should be represented as explicit reversible commands with element deletion/restoration metadata.
+
 ## Backend API Direction
 
 Planned FastAPI endpoints:
@@ -281,6 +343,9 @@ Planned FastAPI endpoints:
 - `POST /auth/refresh`
 - `POST /chat`
 - `POST /models/import`
+- `POST /sync/revit-model`
+- `GET /projects/{id}/changes`
+- `POST /projects/{id}/changes/{operationId}/undo`
 - `GET /models/{id}/statistics`
 - `POST /reports`
 

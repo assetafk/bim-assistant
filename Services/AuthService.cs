@@ -34,7 +34,7 @@ public sealed class AuthService
         role switch
         {
             UserRole.Admin => true,
-            UserRole.Engineer => permission is "model:read" or "model:export" or "ai:chat" or "report:create",
+            UserRole.Engineer => permission is "model:read" or "model:export" or "ai:chat" or "report:create" or "sync:write" or "change:undo",
             UserRole.Viewer => permission is "model:read" or "ai:chat",
             _ => false
         };

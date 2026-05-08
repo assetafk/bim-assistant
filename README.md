@@ -20,6 +20,9 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Rule Engine`: loads custom company rules from `%APPDATA%\BimAiAssistant\rules.json` without recompilation.
 - `AI Report`: includes validation issues, statistics, element counts, AI recommendations and problem zones.
 - `Dashboard`: displays charts for errors, rooms, levels, doors, windows and materials.
+- `Sync`: sends Revit model data, validation issues and change history to backend/database.
+- `Change History`: stores who, when, what changed, old value and new value.
+- `Undo`: reverts the latest tracked model-changing operation.
 
 ## Commercial MVP Scope
 

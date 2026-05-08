@@ -24,7 +24,9 @@ public sealed class App : IExternalApplication
         AddButton<ModelStatisticsCommand>(panel, "Model\nStatistics", "Counts walls, doors, windows, floors and rooms.");
         AddButton<AICommand>(panel, "AI\nAssistant", "Ask questions about the active BIM model.");
         AddButton<ExportCommand>(panel, "Export\nModel", "Export model data to building.json.");
+        AddButton<SyncCommand>(panel, "Sync", "Synchronize Revit model, validation issues and change history with backend.");
         AddButton<FindErrorsCommand>(panel, "Find\nErrors", "Find rooms, doors, walls and windows with missing data.");
+        AddButton<UndoCommand>(panel, "Undo", "Undo last Maybeworks tracked operation.");
         AddButton<GenerateReportCommand>(panel, "Generate\nReport", "Create a PDF model report.");
         AddButton<SettingsCommand>(panel, "Settings", "Configure API URL, key, model and temperature.");
 
