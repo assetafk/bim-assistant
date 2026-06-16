@@ -8,7 +8,7 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 
 - `Model Statistics`: counts walls, doors, windows, floors and rooms through Revit API.
 - `AI Assistant`: sends the current Maybeworks model context as JSON to a configured REST endpoint.
-- `Export Model`: writes `building.json` to `Documents\BimAiAssistant`.
+- `Export Model`: writes JSON, CSV, Excel and PDF exports to `Documents\BimAiAssistant`.
 - `Find Errors`: checks rooms without area, doors without mark, walls without material and windows without a valid level.
 - `Settings`: stores organization, backend URL, API URL, API key, model name and temperature in `%APPDATA%\BimAiAssistant\settings.json`.
 - `Generate Report`: writes an AI PDF report to `Documents\BimAiAssistant\ai-building-report.pdf`.
@@ -23,6 +23,8 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Sync`: sends Revit model data, validation issues and change history to backend/database.
 - `Change History`: stores who, when, what changed, old value and new value.
 - `Undo`: reverts the latest tracked model-changing operation.
+- `REST API`: supports `/projects`, `/model`, `/validation`, `/chat`, `/report`, `/export`.
+- `Architecture`: includes Clean Architecture, CQRS, Repository, Unit of Work and Domain Event abstractions.
 
 ## Commercial MVP Scope
 
@@ -37,6 +39,7 @@ Maybeworks BIM AI Assistant is structured as a production plugin, not a one-file
 - Security target: SSO, JWT, refresh tokens and RBAC.
 
 See [docs/MVP.md](docs/MVP.md) for the detailed Maybeworks MVP specification.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for architecture and non-functional requirements.
 
 ## AI Query Examples
 

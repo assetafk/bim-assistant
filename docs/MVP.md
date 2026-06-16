@@ -18,6 +18,7 @@ Desktop:
 - .NET 8
 - WPF
 - MVVM
+- async/await
 
 Autodesk:
 
@@ -29,6 +30,7 @@ Autodesk:
 Backend:
 
 - FastAPI
+- Swagger/OpenAPI
 
 AI:
 
@@ -45,6 +47,8 @@ Infrastructure:
 - Prometheus
 - Grafana
 - Serilog
+- Docker
+- CI/CD
 
 ## Users
 
@@ -102,6 +106,7 @@ Initial permission model:
 - Dashboard with BIM KPI charts.
 - Project synchronization with backend and database.
 - Change history and undo for tracked operations.
+- Multi-format export.
 - Auth/RBAC service foundation for secured production workflows.
 
 ## Revit Model Structure
@@ -275,6 +280,21 @@ Charts:
 
 The dashboard is available from the `AI Tools` ribbon tab and uses the same Revit API model data and Validation Engine results as AI Report.
 
+## Export
+
+The plugin supports multi-format export:
+
+- JSON
+- Excel
+- PDF
+- CSV
+
+Export output folder:
+
+```text
+Documents\BimAiAssistant
+```
+
 ## Sync
 
 The plugin supports project synchronization through the production data pipeline:
@@ -339,9 +359,14 @@ For production use, destructive object-creation operations should be represented
 
 Planned FastAPI endpoints:
 
+- `GET /projects`
+- `GET /model`
+- `POST /validation`
+- `POST /chat`
+- `POST /report`
+- `POST /export`
 - `POST /auth/sso/callback`
 - `POST /auth/refresh`
-- `POST /chat`
 - `POST /models/import`
 - `POST /sync/revit-model`
 - `GET /projects/{id}/changes`
@@ -350,3 +375,23 @@ Planned FastAPI endpoints:
 - `POST /reports`
 
 The Revit plugin keeps the desktop workflow responsive and delegates enterprise concerns such as long-running processing, queueing, storage and monitoring to backend services.
+
+## Architecture Requirements
+
+The codebase includes production architecture boundaries and abstractions:
+
+- Dependency Injection / composition root.
+- Repository Pattern.
+- Unit Of Work.
+- CQRS.
+- MediatR-ready command/query handlers.
+- FluentValidation-ready validator abstraction.
+- AutoMapper-ready mapper abstraction.
+- Clean Architecture.
+- SOLID.
+- Domain Events.
+- JWT.
+- Refresh Token.
+- Swagger/OpenAPI.
+- Docker.
+- CI/CD.

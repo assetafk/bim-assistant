@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: Maybeworks BIM AI Assistant API
+  version: 1.0.0
+paths:
+  /projects:
+    get:
+      summary: Get available BIM projects
+      responses:
+        "200":
+          description: Project list
+  /model:
+    get:
+      summary: Get normalized Revit model
+      parameters:
+        - name: project
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Building model
+  /validation:
+    post:
+      summary: Validate model
+      responses:
+        "200":
+          description: Validation result
+  /chat:
+    post:
+      summary: AI chat for model context
+      responses:
+        "200":
+          description: AI response
+  /report:
+    post:
+      summary: Generate report
+      responses:
+        "200":
+          description: Report metadata
+  /export:
+    post:
+      summary: Export model
+      responses:
+        "200":
+          description: Export metadata
+  /sync/revit-model:
+    post:
+      summary: Synchronize Revit model snapshot
+      responses:
+        "200":
+          description: Sync result
