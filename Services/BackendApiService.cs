@@ -9,25 +9,45 @@ public sealed class BackendApiService
 {
     private readonly SettingsService _settingsService;
     private readonly AuthService _authService;
+    private readonly RedisCacheService _cacheService;
 
     public BackendApiService(SettingsService settingsService, AuthService authService)
     {
         _settingsService = settingsService;
         _authService = authService;
+        _cacheService = new RedisCacheService(settingsService);
     }
 
     public async Task<IReadOnlyList<WorkProject>> GetProjectsAsync(AuthSession? session = null, CancellationToken cancellationToken = default)
     {
+        const string cacheKey = "maybeworks:projects";
+        IReadOnlyList<WorkProject>? cached = await _cacheService.GetAsync<IReadOnlyList<WorkProject>>(cacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
         using HttpClient httpClient = CreateClient(session);
         string json = await httpClient.GetStringAsync("/projects", cancellationToken);
-        return JsonConvert.DeserializeObject<List<WorkProject>>(json) ?? [];
+        IReadOnlyList<WorkProject> projects = JsonConvert.DeserializeObject<List<WorkProject>>(json) ?? [];
+        await _cacheService.SetAsync(cacheKey, projects, TimeSpan.FromMinutes(10), cancellationToken);
+        return projects;
     }
 
     public async Task<BuildingModel> GetModelAsync(string project, AuthSession? session = null, CancellationToken cancellationToken = default)
     {
+        string cacheKey = $"maybeworks:model:{project}";
+        BuildingModel? cached = await _cacheService.GetAsync<BuildingModel>(cacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
         using HttpClient httpClient = CreateClient(session);
         string json = await httpClient.GetStringAsync($"/model?project={Uri.EscapeDataString(project)}", cancellationToken);
-        return JsonConvert.DeserializeObject<BuildingModel>(json) ?? new BuildingModel();
+        BuildingModel model = JsonConvert.DeserializeObject<BuildingModel>(json) ?? new BuildingModel();
+        await _cacheService.SetAsync(cacheKey, model, TimeSpan.FromMinutes(5), cancellationToken);
+        return model;
     }
 
     public Task<string> ValidateAsync(BuildingModel model, AuthSession? session = null, CancellationToken cancellationToken = default) =>
