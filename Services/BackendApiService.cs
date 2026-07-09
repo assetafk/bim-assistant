@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Text;
+using BimAiAssistant.Application.Abstractions;
 using BimAiAssistant.Models;
 using Newtonsoft.Json;
 
@@ -9,13 +10,13 @@ public sealed class BackendApiService
 {
     private readonly SettingsService _settingsService;
     private readonly AuthService _authService;
-    private readonly RedisCacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
-    public BackendApiService(SettingsService settingsService, AuthService authService)
+    public BackendApiService(SettingsService settingsService, AuthService authService, ICacheService? cacheService = null)
     {
         _settingsService = settingsService;
         _authService = authService;
-        _cacheService = new RedisCacheService(settingsService);
+        _cacheService = cacheService ?? new RedisCacheService(settingsService);
     }
 
     public async Task<IReadOnlyList<WorkProject>> GetProjectsAsync(AuthSession? session = null, CancellationToken cancellationToken = default)

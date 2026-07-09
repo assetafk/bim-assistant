@@ -24,6 +24,7 @@ The desktop add-in is built with C# / .NET 8 / WPF / MVVM and targets Revit 2023
 - `Change History`: stores who, when, what changed, old value and new value.
 - `Undo`: reverts the latest tracked model-changing operation.
 - `REST API`: supports `/projects`, `/model`, `/validation`, `/chat`, `/report`, `/export`.
+- `Redis Cache`: caches backend projects and model snapshots with TTL.
 - `Architecture`: includes Clean Architecture, CQRS, Repository, Unit of Work and Domain Event abstractions.
 
 ## Commercial MVP Scope

@@ -107,6 +107,7 @@ Initial permission model:
 - Project synchronization with backend and database.
 - Change history and undo for tracked operations.
 - Multi-format export.
+- Redis cache for backend project/model reads.
 - Auth/RBAC service foundation for secured production workflows.
 
 ## Revit Model Structure
@@ -356,6 +357,23 @@ Undo behavior:
 For production use, destructive object-creation operations should be represented as explicit reversible commands with element deletion/restoration metadata.
 
 ## Backend API Direction
+
+## Redis Cache
+
+The plugin includes a Redis cache adapter for backend reads.
+
+Cached data:
+
+- `GET /projects`: cached for 10 minutes.
+- `GET /model`: cached for 5 minutes per project.
+
+Default connection string:
+
+```text
+localhost:6379
+```
+
+The value is configurable in Settings as `Redis`.
 
 Planned FastAPI endpoints:
 

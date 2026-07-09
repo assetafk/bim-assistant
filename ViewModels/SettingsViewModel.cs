@@ -11,6 +11,7 @@ public sealed class SettingsViewModel : ObservableObject
     private readonly SettingsService _settingsService;
     private string _organizationName;
     private string _backendUrl;
+    private string _redisConnectionString;
     private string _apiUrl;
     private string _apiKey;
     private string _modelName;
@@ -22,6 +23,7 @@ public sealed class SettingsViewModel : ObservableObject
         AppSettings settings = _settingsService.Load();
         _organizationName = settings.OrganizationName;
         _backendUrl = settings.BackendUrl;
+        _redisConnectionString = settings.RedisConnectionString;
         _apiUrl = settings.ApiUrl;
         _apiKey = settings.ApiKey;
         _modelName = settings.ModelName;
@@ -39,6 +41,12 @@ public sealed class SettingsViewModel : ObservableObject
     {
         get => _backendUrl;
         set => SetProperty(ref _backendUrl, value);
+    }
+
+    public string RedisConnectionString
+    {
+        get => _redisConnectionString;
+        set => SetProperty(ref _redisConnectionString, value);
     }
 
     public string ApiUrl
@@ -73,6 +81,7 @@ public sealed class SettingsViewModel : ObservableObject
         {
             OrganizationName = OrganizationName,
             BackendUrl = BackendUrl,
+            RedisConnectionString = RedisConnectionString,
             ApiUrl = ApiUrl,
             ApiKey = ApiKey,
             ModelName = ModelName,

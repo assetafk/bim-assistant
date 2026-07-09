@@ -13,6 +13,6 @@ public sealed class ServiceRegistry
     {
         AuthService = new AuthService(SettingsService);
         RedisCacheService = new RedisCacheService(SettingsService);
-        BackendApiService = new BackendApiService(SettingsService, AuthService);
+        BackendApiService = new BackendApiService(SettingsService, AuthService, RedisCacheService);
     }
 }
