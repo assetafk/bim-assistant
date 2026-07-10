@@ -9,7 +9,7 @@ public sealed class RedisCacheService : ICacheService, IDisposable
 {
     private readonly SettingsService _settingsService;
     private ConnectionMultiplexer? _connection;
-    private bool _disabled;
+    private DateTimeOffset _retryAfter = DateTimeOffset.MinValue;
 
     public RedisCacheService(SettingsService settingsService)
     {
@@ -31,6 +31,7 @@ public sealed class RedisCacheService : ICacheService, IDisposable
         }
         catch (RedisException)
         {
+            MarkUnavailable();
             return default;
         }
         catch (JsonException)
@@ -40,22 +41,41 @@ public sealed class RedisCacheService : ICacheService, IDisposable
         }
     }
 
-    public Task SetAsync<T>(string key, T value, TimeSpan ttl, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan ttl, CancellationToken cancellationToken = default)
     {
         IDatabase? database = TryGetDatabase();
         if (database is null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        string json = JsonConvert.SerializeObject(value);
-        return database.StringSetAsync(key, json, ttl);
+        try
+        {
+            string json = JsonConvert.SerializeObject(value);
+            await database.StringSetAsync(key, json, ttl);
+        }
+        catch (RedisException)
+        {
+            MarkUnavailable();
+        }
     }
 
-    public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         IDatabase? database = TryGetDatabase();
-        return database?.KeyDeleteAsync(key) ?? Task.CompletedTask;
+        if (database is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await database.KeyDeleteAsync(key);
+        }
+        catch (RedisException)
+        {
+            MarkUnavailable();
+        }
     }
 
     public void Dispose()
@@ -65,7 +85,7 @@ public sealed class RedisCacheService : ICacheService, IDisposable
 
     private IDatabase? TryGetDatabase()
     {
-        if (_disabled)
+        if (DateTimeOffset.UtcNow < _retryAfter)
         {
             return null;
         }
@@ -77,7 +97,7 @@ public sealed class RedisCacheService : ICacheService, IDisposable
                 AppSettings settings = _settingsService.Load();
                 if (string.IsNullOrWhiteSpace(settings.RedisConnectionString))
                 {
-                    _disabled = true;
+                    MarkUnavailable();
                     return null;
                 }
 
@@ -89,10 +109,15 @@ public sealed class RedisCacheService : ICacheService, IDisposable
 
             return _connection.GetDatabase();
         }
-        catch (RedisException)
+        catch (Exception ex) when (ex is RedisException or ArgumentException)
         {
-            _disabled = true;
+            MarkUnavailable();
             return null;
         }
+    }
+
+    private void MarkUnavailable()
+    {
+        _retryAfter = DateTimeOffset.UtcNow.AddMinutes(1);
     }
 }
