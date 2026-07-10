@@ -1,6 +1,7 @@
 services:
   api:
-    image: maybeworks/bim-ai-assistant-api:latest
+    build:
+      context: ./api
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/bim
       REDIS_URL: redis://redis:6379
